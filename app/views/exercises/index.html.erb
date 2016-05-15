@@ -1,0 +1,21 @@
+<h1>Listing exercises</h1>
+
+<table>
+  <thead>
+  <tr>
+    <th>Exercise set</th>
+    <th>Exercise</th>
+    <th>Delete</th>
+  </tr>
+  </thead>
+  <% @exercises.each do |exercise| %>
+      <tr>
+        <td><%= exercise.exercise_set.name %></td>
+        <td><%= exercise.label %></td>
+        <td><%= link_to "X",
+                        delete_exercise_path(exercise),
+                        data: {:confirm => 'Are you sure?'}, :method => :delete %></td>
+      </tr>
+  <% end %>
+
+</table>

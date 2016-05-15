@@ -1,0 +1,7 @@
+<h1>Please enter a name for this new exercise set</h1>
+
+<%= form_for @exercise_set, url: {action: 'create' } do |f| %>
+    <%= f.text_field :name %>
+
+    <%= f.submit 'Create' %>
+<% end %>

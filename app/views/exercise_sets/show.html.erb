@@ -1,0 +1,15 @@
+<h1><%= @exercise_set.name %> (<%= @exercise_set.exercises.length %>)</h1>
+
+<% @exercise_set.exercises.each do |exercise| %>
+    <li><%= exercise.label %>
+      <%= link_to "X",
+                  exercise_set_exercise_path(@exercise_set, exercise),
+                  data: {:confirm => 'Are you sure?'}, :method => :delete %>
+    </li>
+<% end %>
+
+<%= form_for @exercise, url: {action: 'add_exercise' } do |e| %>
+    <%= e.text_field :label, :autofocus => true %>
+
+    <%= e.submit "Add exercise" %>
+<% end %>

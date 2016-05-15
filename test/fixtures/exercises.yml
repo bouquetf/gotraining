@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  site: MyString
+  chapter: MyString
+  number: 1
+  period: MyString
+  next: 2016-05-11 23:17:37
+
+two:
+  site: MyString
+  chapter: MyString
+  number: 1
+  period: MyString
+  next: 2016-05-11 23:17:37

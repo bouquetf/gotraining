@@ -1,0 +1,18 @@
+<h1>Exercise set <%= link_to "Add", new_exercise_set_path %> </h1>
+
+<ul>
+  <% @exercise_sets.each do |exerciseSet| %>
+      <li><%= link_to exerciseSet.name, exerciseSet %> (<%= exerciseSet.exercises.length %>)
+        <% if exerciseSet.exercises.length == 0 %>
+            <%= link_to "X",
+                        exercise_set_path(exerciseSet),
+                        data: {:confirm => 'Are you sure?'}, :method => :delete %>
+        <% end %>
+
+        <%= link_to 'Add to training',
+                    add_exercise_set_to_training_path(exerciseSet),
+                    :method => :post
+        %>
+      </li>
+  <% end %>
+</ul>

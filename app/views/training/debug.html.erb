@@ -1,0 +1,29 @@
+<h1>Listing exercises</h1>
+
+<table>
+  <thead>
+  <tr>
+    <th>Label</th>
+    <th>Period</th>
+    <th>Next</th>
+    <th>DONE</th>
+    <th>FAIL</th>
+    <th>delete</th>
+  </tr>
+  </thead>
+  <% @trainings.each do |training| %>
+      <tr>
+        <td><%= training.exercise.label %> - <%= training.exercise.exercise_set.name %></td>
+        <td><%= training.period %></td>
+        <td><%= training.next %></td>
+        <td><%= button_to [:done, training] do %> OK <% end %></td>
+        <td><%= button_to [:failed, training] do %> X <% end %> </td>
+        <td><%= link_to "X",
+                        training_path(training),
+                        data: {:confirm => 'Are you sure?'}, :method => :delete
+            %>
+        </td>
+      </tr>
+  <% end %>
+
+</table>

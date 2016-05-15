@@ -1,0 +1,21 @@
+<h1>Exercises for today</h1>
+
+<table>
+  <thead>
+  <tr>
+    <th>Label</th>
+    <th>Done</th>
+    <th>Failed</th>
+  </tr>
+  </thead>
+
+  <% @trainings.each do |training| %>
+      <tr>
+        <td><%= training.exercise.exercise_set.name %> - <%= training.exercise.label %></td>
+        <td><%= button_to [:done, training] do %> OK <% end %> </td>
+        <td><%= button_to [:failed, training] do %> X <% end %></td>
+      </tr>
+  <% end %>
+
+
+</table>
