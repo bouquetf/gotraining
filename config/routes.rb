@@ -10,9 +10,14 @@ Rails.application.routes.draw do
     resources :exercises
   end
 
+  resources :user
 
   # TODO : already provided by resources
   post '/exercise_sets/:id/add_exercise/', to: 'exercise_sets#add_exercise'
+
+  get '/sign_in', to: 'session#new', as: 'sign_in'
+  post '/sign_in', to: 'session#create'
+  get '/logout', to: 'session#destroy', as: 'logout'
 
   delete '/exercises/:id', to: 'exercises#destroy', as: 'delete_exercise'
   get '/exercises', to: 'exercises#index'

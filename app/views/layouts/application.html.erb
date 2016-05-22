@@ -8,10 +8,20 @@
 </head>
 <body>
 
-<ul>
-  <li><%= link_to "Training", root_path %></li>
-  <li><%= link_to "Exercise Sets", exercise_sets_path %></li>
-</ul>
+<header>
+  <ul>
+    <li><%= link_to "Training", root_path %></li>
+    <li><%= link_to "Exercise Sets", exercise_sets_path %></li>
+  </ul>
+</header>
+
+<div id="user_panel">
+  <% if session[:user_id] == nil %>
+    <%= link_to 'Sign In', sign_in_path %> / <%= link_to 'Register', new_user_path %>
+  <% else %>
+    <%= link_to 'Logout', logout_path %>
+  <% end %>
+</div>
 
 <%= yield %>
 
