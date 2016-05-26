@@ -2,14 +2,18 @@
 
 <% @exercise_set.exercises.each do |exercise| %>
     <li><%= exercise.label %>
-      <%= link_to "X",
-                  exercise_set_exercise_path(@exercise_set, exercise),
-                  data: {:confirm => 'Are you sure?'}, :method => :delete %>
-    </li>
+      <% if exercise.owner.id == session[:user_id] %>
+          <%= link_to "X",
+                      exercise_set_exercise_path(@exercise_set, exercise),
+                      data: {:confirm => 'Are you sure?'}, :method => :delete %>
+          </li>
+      <% end %>
 <% end %>
 
-<%= form_for @exercise, url: {action: 'add_exercise' } do |e| %>
-    <%= e.text_field :label, :autofocus => true %>
+<% if session[:user_id] != nil %>
+    <%= form_for @exercise, url: exercise_set_exercises_path(@exercise_set.id) do |e| %>
+        <%= e.text_field :label, :autofocus => true %>
 
-    <%= e.submit "Add exercise" %>
+        <%= e.submit "Add exercise" %>
+    <% end %>
 <% end %>

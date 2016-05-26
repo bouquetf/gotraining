@@ -14,28 +14,36 @@
 ActiveRecord::Schema.define(version: 20160515224400) do
 
   create_table "exercise_sets", force: :cascade do |t|
+    t.integer  "owner_id"
     t.string   "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
+  add_index "exercise_sets", ["owner_id"], name: "index_exercise_sets_on_owner_id"
+
   create_table "exercises", force: :cascade do |t|
     t.integer  "exercise_set_id"
-    t.integer  "training_id"
+    t.integer  "owner_id"
     t.string   "label"
     t.datetime "created_at",      null: false
     t.datetime "updated_at",      null: false
   end
 
   add_index "exercises", ["exercise_set_id"], name: "index_exercises_on_exercise_set_id"
-  add_index "exercises", ["training_id"], name: "index_exercises_on_training_id"
+  add_index "exercises", ["owner_id"], name: "index_exercises_on_owner_id"
 
   create_table "trainings", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "exercise_id"
     t.string   "period"
     t.datetime "next"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
   end
+
+  add_index "trainings", ["exercise_id"], name: "index_trainings_on_exercise_id"
+  add_index "trainings", ["user_id"], name: "index_trainings_on_user_id"
 
   create_table "users", force: :cascade do |t|
     t.string   "username"

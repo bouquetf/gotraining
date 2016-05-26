@@ -1,63 +1,71 @@
 class TrainingController < ApplicationController
+  before_action :connected_user, only: [:index, :debug, :destroy, :add_exercise,
+                                        :add_exercise_set, :failed, :done]
+
   def index
-    @trainings = Training.where('next < ?', DateTime.now).order(:next)
+    @trainings = @user_connected.trainings.where('NEXT IS NULL OR NEXT<?', DateTime.now).order(:next)
+    # OR NEXT<?', DateTime.now
   end
 
   def debug
-    @trainings = Training.all.order(:next)
+    @trainings = @user_connected.trainings.all.order(:next)
   end
 
   def destroy
-    Training.find(params[:id]).delete
+    @user_connected.trainings.find(params[:id]).delete
     redirect_to :back
   end
 
   def add_exercise
-    exercise = Exercise.find(params[:id])
-    if exercise.training == nil
-      Training.create(:exercise => exercise, :next => DateTime.now).save
-    end
+    unless @user_connected.exercises.find(params[:id]).exists?
+      @user_connected.exercises << Exercise.find(params[:id])
 
+      training = @user_connected.trainings.where(:exercise_id => params[:id])
+      training.next = DateTime.now
+    end
     redirect_to :back
   end
 
   def add_exercise_set
     exercise_set = ExerciseSet.find(params[:id])
     exercise_set.exercises.each do |exercise|
-      if exercise.training == nil
-        Training.create(:exercise => exercise, :next => DateTime.now).save
+      unless @user_connected.exercises.where(:id => exercise.id).exists?
+        @user_connected.exercises << exercise
+
+        training = @user_connected.trainings.where(:exercise_id => exercise.id).first
+        training.next=DateTime.now
       end
     end
     redirect_to :back
   end
 
   def done
-    @training = Training.find(params[:id])
+    @training = @user_connected.trainings.find(params[:id])
     case @training.period
       when 'hour'
         @training.period = 'day'
-        @training.next = @training.next + 1.day
+        @training.next = Time.now + 1.day
       when 'day'
         @training.period = 'week'
-        @training.next = @training.next + 1.week
+        @training.next = Time.now + 1.week
       when 'week'
         @training.period = 'month'
-        @training.next = @training.next + 1.month
+        @training.next = Time.now + 1.month
       when 'month'
         @training.period = 'trimester'
-        @training.next = @training.next + 3.months
+        @training.next = Time.now + 3.months
       when 'trimester'
         @training.period = 'semester'
-        @training.next = @training.next + 6.months
+        @training.next = Time.now + 6.months
       when 'semester'
         @training.period = 'year'
-        @training.next = @training.next + 1.year
+        @training.next = Time.now + 1.year
       when 'year'
         @training.period = 'year'
-        @training.next = @training.next + 1.year
+        @training.next = Time.now + 1.year
       else
         @training.period = 'hour'
-        @training.next = @training.next + 1.hour
+        @training.next = Time.now + 1.hour
     end
 
     @training.save
@@ -66,11 +74,26 @@ class TrainingController < ApplicationController
   end
 
   def failed
-    @training = Training.find(params[:id])
+    @training = @user_connected.trainings.find(params[:id])
     @training.next = Time.now
     @training.period = nil
     @training.save
 
     redirect_to :back
+  end
+
+  private
+
+  def connected_user
+    begin
+      if session[:user_id] != nil
+        @user_connected = User.find(session[:user_id])
+      else
+        redirect_to sign_in_path
+      end
+    rescue ActiveRecord::RecordNotFound
+      session[:user_id] = nil
+      redirect_to sign_in_path
+    end
   end
 end

@@ -1,3 +1,4 @@
 class Training < ActiveRecord::Base
-  has_one :exercise
+  belongs_to :exercise
+  belongs_to :user
 end
